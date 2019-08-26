@@ -15,8 +15,8 @@ using System.Text;
 using System.Windows.Forms;
 using SimpleClientServer.Mainform;
 
-namespace SimpleClientServer.Main {
-	class Main {
+namespace SimpleClientServer.MainController {
+	class MainController {
 		// Private variables
 		private MainForm mainForm;
 		private Socket socket;
