@@ -18,16 +18,14 @@ namespace SimpleClientServer.Ip {
         /// </summary>
         public string getLocalIp() {
             IPHostEntry host;
-            // get dns ip
             host = Dns.GetHostEntry(Dns.GetHostName());
             // try to get local ip
             foreach (IPAddress ip in host.AddressList)
             {
-                // if the pc got an ip
                 if (isOurIp(ip))
                     return ip.ToString();
             }
-            // else, return local ip
+            // else, return local default ip
             return "127.0.0.1";
         }
         private bool isOurIp(IPAddress ip) {

@@ -11,12 +11,12 @@ namespace SimpleClientServer.mainController
         // Private variables
         private Ip ip = new Ip();
         private Port port = new Port();
+        private Buffer t_buffer = new Buffer(this);
         private MainForm mainForm;
         private Socket socket;
         private EndPoint epLocal, epRemote;
-        private byte[] buffer;
         // private consts
-        private const byte MAXCHAR = 255;
+        private const byte MAXCHARINMESSAGE = 255;
         // public variables
         // public consts
 
@@ -26,6 +26,7 @@ namespace SimpleClientServer.mainController
         /// <param name="p_mainForm">Form to attache the program</param>
         public MainController(MainForm p_mainForm)
         {
+            epLocal = epRemote = null;
             this.mainForm = p_mainForm;
         }
 
@@ -34,31 +35,36 @@ namespace SimpleClientServer.mainController
         /// </summary>
         public void getObjects()
         {
-            this.localIp = ip.getLocalIp();
+            ip.Local = ip.getLocalIp();
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this.socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            port.Local = "1000";
-            port.Remote = "1001";
+            // default port used -> will not be checked for tcp connection
+            this.port.Local = "1000";
+            this.port.Remote = "1001";
+        }
+        /// <param name="p_localPort">local port to use</param>
+        public void setLocalPort(String p_localPort) {
+            this.port.Local = p_localPort;
+        }
+        /// <param name="p_remotePort">remote port to use</param>
+        public void setRemotePort(String p_remotePort) {
+            this.port.Remote = p_remotePort;
+        }
+        /// <param name="p_remoteIp">remote ip to connect</param>
+        public void setRemoteIp(String p_remoteIp) {
+            this.ip.Remote = p_remoteIp;
         }
 
         /// <summary>
         /// Connect From local ip and port and remote ip and port
         /// </summary>
-        /// <param name="p_localPort">local port to use</param>
-        /// <param name="p_remoteIp">remote ip to connect</param>
-        /// <param name="p_remotePort">remote port to use</param>
-        public void Connect(String p_localPort, String p_remoteIp, String p_remotePort)
-        {
-            // get object of local network
-            this.epLocal = new IPEndPoint(IPAddress.Parse(ip.Local), Convert.ToInt32(port.Local));
-            this.socket.Bind(epLocal);
-            // get object pf remoted network
-            this.epRemote = new IPEndPoint(IPAddress.Parse(ip.Remote), Convert.ToInt32(port.Remote));
-            this.socket.Connect(epRemote);
-            // set buffer
-            this.buffer = new byte[MAXCHAR];
-            // start listening
-            this.socket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epRemote, new AsyncCallback(MessageCallBack), buffer);
+        public void Connect() {
+            setConnectVariables();
+            bindLocalEndPoint();
+            if (canConnect()) {
+                connect();
+                startListening();
+            }
         }
         /// <summary>
         /// 
@@ -67,26 +73,58 @@ namespace SimpleClientServer.mainController
         {
             try
             {
-                // set an message array
-                byte[] receivedData = new byte[MAXCHAR];
-                // get data [format byte]
-                receivedData = (byte[])aResult.AsyncState;
-                // array converter ASCII
-                ASCIIEncoding aEncoding = new ASCIIEncoding();
-                // get char from byte got
-                string receivedMessage = aEncoding.GetString(receivedData);
-                // reset the buffer
-                this.buffer = new byte[MAXCHAR];
-                // restart listening
-                this.socket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epRemote, new AsyncCallback(MessageCallBack), buffer);
+                tryReceiveMessage();
+                startListening();
                 //return receivedMessage;
             }
             catch (Exception ex)
             {
                 // show the error
-                MessageBox.Show(ex.ToString());
-                //return "error!";
+                displayError(ex.ToString());
             }
+        }
+        private String convertMessage(byte[] p_message) {
+            // array converter ASCII
+            ASCIIEncoding aEncoding = new ASCIIEncoding();
+            // get char from byte got
+            return aEncoding.GetString(p_message);
+        }
+        public void displayMessageInForm(String p_message) {
+            // TODO : add item into form
+        }
+        private bool canConnect() {
+            if (epLocal != null && epRemote != null)
+                return true;
+            else
+                return false;
+        }
+        private void connect() {
+            this.socket.Connect(epRemote);
+        }
+        private void setConnectVariables() {
+            // get object of local network
+            this.epLocal = new IPEndPoint(IPAddress.Parse(ip.Local), Convert.ToInt32(port.Local));
+            // get object pf remoted network
+            this.epRemote = new IPEndPoint(IPAddress.Parse(ip.Remote), Convert.ToInt32(port.Remote));
+        }
+        private void bindLocalEndPoint() {
+            this.socket.Bind(epLocal);
+        }
+        private void tryReceiveMessage() {
+            byte[] receivedData = new byte[MAXCHARINMESSAGE];
+            // format byte
+            receivedData = (byte[])aResult.AsyncState;
+            // TODO : trigger event on this buffer set
+            //buffer = receivedMessage;
+        }
+        private void startListening() {
+            // reset the buffer
+            this.buffer = new byte[MAXCHARINMESSAGE];
+            // restart listening
+            this.socket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epRemote, new AsyncCallback(MessageCallBack), buffer);
+        }
+        private void displayError(String message) {
+            MessageBox.Show(message);
         }
     }
 }
