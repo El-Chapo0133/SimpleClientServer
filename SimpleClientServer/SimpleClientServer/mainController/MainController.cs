@@ -1,17 +1,19 @@
-﻿using System;
+﻿using SimpleClientServer._object;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Windows.Forms;
+using Buffer = SimpleClientServer._object.Buffer;
 
 namespace SimpleClientServer.mainController
 {
-    class MainController
+    public class MainController
     {
         // Private variables
         private Ip ip = new Ip();
         private Port port = new Port();
-        private Buffer t_buffer = new Buffer(this);
+        private Buffer buffer;
         private MainForm mainForm;
         private Socket socket;
         private EndPoint epLocal, epRemote;
@@ -28,6 +30,7 @@ namespace SimpleClientServer.mainController
         {
             epLocal = epRemote = null;
             this.mainForm = p_mainForm;
+            this.buffer = new Buffer(this);
         }
 
         /// <summary>
@@ -73,7 +76,7 @@ namespace SimpleClientServer.mainController
         {
             try
             {
-                tryReceiveMessage();
+                tryReceiveMessage(aResult);
                 startListening();
                 //return receivedMessage;
             }
@@ -83,7 +86,7 @@ namespace SimpleClientServer.mainController
                 displayError(ex.ToString());
             }
         }
-        private String convertMessage(byte[] p_message) {
+        public String convertMessage(byte[] p_message) {
             // array converter ASCII
             ASCIIEncoding aEncoding = new ASCIIEncoding();
             // get char from byte got
@@ -91,6 +94,7 @@ namespace SimpleClientServer.mainController
         }
         public void displayMessageInForm(String p_message) {
             // TODO : add item into form
+            MessageBox.Show("Test!");
         }
         private bool canConnect() {
             if (epLocal != null && epRemote != null)
@@ -110,7 +114,7 @@ namespace SimpleClientServer.mainController
         private void bindLocalEndPoint() {
             this.socket.Bind(epLocal);
         }
-        private void tryReceiveMessage() {
+        private void tryReceiveMessage(IAsyncResult aResult) {
             byte[] receivedData = new byte[MAXCHARINMESSAGE];
             // format byte
             receivedData = (byte[])aResult.AsyncState;
@@ -118,10 +122,8 @@ namespace SimpleClientServer.mainController
             //buffer = receivedMessage;
         }
         private void startListening() {
-            // reset the buffer
-            this.buffer = new byte[MAXCHARINMESSAGE];
             // restart listening
-            this.socket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epRemote, new AsyncCallback(MessageCallBack), buffer);
+            this.socket.BeginReceiveFrom(buffer.BufferByte, 0, buffer.BufferByte.Length, SocketFlags.None, ref epRemote, new AsyncCallback(MessageCallBack), buffer.BufferByte);
         }
         private void displayError(String message) {
             MessageBox.Show(message);

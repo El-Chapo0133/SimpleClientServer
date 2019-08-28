@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="_object\Buffer.cs" />
+    <Compile Include="_object\Ip.cs" />
     <Compile Include="mainController\MainController.cs" />
     <Compile Include="mainForm\MainForm.cs">
       <SubType>Form</SubType>
@@ -53,6 +55,7 @@
     <Compile Include="mainForm\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="_object\Port.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

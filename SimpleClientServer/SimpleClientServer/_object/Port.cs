@@ -1,4 +1,4 @@
-namespace SimpleClientServer.Port {
+namespace SimpleClientServer._object {
     public class Port {
         private string local, remote;
         public Port() {

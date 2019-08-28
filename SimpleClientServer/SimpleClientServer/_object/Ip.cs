@@ -1,4 +1,7 @@
-namespace SimpleClientServer.Ip {
+using System.Net;
+using System.Net.Sockets;
+
+namespace SimpleClientServer._object {
     public class Ip {
         private string local, remote;
         public Ip() {
