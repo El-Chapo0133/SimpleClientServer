@@ -9,11 +9,12 @@ namespace SimpleClientServer.mainController
     class MainController
     {
         // Private variables
+        private Ip ip = new Ip();
+        private Port port = new Port();
         private MainForm mainForm;
         private Socket socket;
         private EndPoint epLocal, epRemote;
         private byte[] buffer;
-        private string localIp, localPort, remotePort;
         // private consts
         private const byte MAXCHAR = 255;
         // public variables
@@ -33,32 +34,11 @@ namespace SimpleClientServer.mainController
         /// </summary>
         public void getObjects()
         {
-            this.localIp = getLocalIp();
+            this.localIp = ip.getLocalIp();
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this.socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            this.localPort = "1000";
-            this.remotePort = "1001";
-        }
-
-        /// <summary>
-        /// get local ip if there is an ip
-        /// give 127.0.0.1 if there is no ip
-        /// </summary>
-        private String getLocalIp()
-        {
-            //crée une variable
-            IPHostEntry host;
-            // get dns ip
-            host = Dns.GetHostEntry(Dns.GetHostName());
-            // try to get local ip
-            foreach (IPAddress ip in host.AddressList)
-            {
-                // if the pc got an ip
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    return ip.ToString();
-            }
-            // else, return local ip
-            return "127.0.0.1";
+            port.Local = "1000";
+            port.Remote = "1001";
         }
 
         /// <summary>
@@ -70,10 +50,10 @@ namespace SimpleClientServer.mainController
         public void Connect(String p_localPort, String p_remoteIp, String p_remotePort)
         {
             // get object of local network
-            this.epLocal = new IPEndPoint(IPAddress.Parse(this.localIp), Convert.ToInt32(p_localPort));
+            this.epLocal = new IPEndPoint(IPAddress.Parse(ip.Local), Convert.ToInt32(port.Local));
             this.socket.Bind(epLocal);
             // get object pf remoted network
-            this.epRemote = new IPEndPoint(IPAddress.Parse(p_remoteIp), Convert.ToInt32(p_remotePort));
+            this.epRemote = new IPEndPoint(IPAddress.Parse(ip.Remote), Convert.ToInt32(port.Remote));
             this.socket.Connect(epRemote);
             // set buffer
             this.buffer = new byte[MAXCHAR];
