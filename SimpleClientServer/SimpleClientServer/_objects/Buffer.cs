@@ -14,8 +14,14 @@ namespace SimpleClientServer.Buffer {
                 setBuffer_Event();
             }
         }
+        private String convertMessage() {
+            // array converter ASCII
+            ASCIIEncoding aEncoding = new ASCIIEncoding();
+            // get char from byte got
+            return aEncoding.GetString(this.buffer);
+        }
         public void setBuffer_Event() {
-            mainController.displayMessageInForm(mainController.convertMessage(this.buffer));
+            mainController.displayMessageInForm(convertMessage());
         }
     }
 }

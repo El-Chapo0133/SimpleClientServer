@@ -8,10 +8,10 @@ namespace SimpleClientServer.mainController
 {
     class MainController
     {
-        // Private variables
+        // private variables
         private Ip ip = new Ip();
         private Port port = new Port();
-        private Buffer t_buffer = new Buffer(this);
+        private Buffer buffer = new Buffer(this);
         private MainForm mainForm;
         private Socket socket;
         private EndPoint epLocal, epRemote;
@@ -58,7 +58,7 @@ namespace SimpleClientServer.mainController
         /// <summary>
         /// Connect From local ip and port and remote ip and port
         /// </summary>
-        public void Connect() {
+        public void fullConnect() {
             setConnectVariables();
             bindLocalEndPoint();
             if (canConnect()) {
@@ -75,22 +75,15 @@ namespace SimpleClientServer.mainController
             {
                 tryReceiveMessage();
                 startListening();
-                //return receivedMessage;
             }
             catch (Exception ex)
             {
-                // show the error
-                displayError(ex.ToString());
+                displayMessage(ex.ToString());
             }
-        }
-        private String convertMessage(byte[] p_message) {
-            // array converter ASCII
-            ASCIIEncoding aEncoding = new ASCIIEncoding();
-            // get char from byte got
-            return aEncoding.GetString(p_message);
         }
         public void displayMessageInForm(String p_message) {
             // TODO : add item into form
+            mainForm.displayMessage(p_message);
         }
         private bool canConnect() {
             if (epLocal != null && epRemote != null)
@@ -118,12 +111,10 @@ namespace SimpleClientServer.mainController
             //buffer = receivedMessage;
         }
         private void startListening() {
-            // reset the buffer
-            this.buffer = new byte[MAXCHARINMESSAGE];
             // restart listening
             this.socket.BeginReceiveFrom(buffer, 0, buffer.Length, SocketFlags.None, ref epRemote, new AsyncCallback(MessageCallBack), buffer);
         }
-        private void displayError(String message) {
+        private void displayMessage(String message) {
             MessageBox.Show(message);
         }
     }

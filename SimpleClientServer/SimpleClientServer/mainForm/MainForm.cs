@@ -8,5 +8,8 @@ namespace SimpleClientServer
         {
             InitializeComponent();
         }
+        public void displayMessage(string p_message) {
+            // TODO : dispaly message in a list, label or something
+        }
     }
 }
