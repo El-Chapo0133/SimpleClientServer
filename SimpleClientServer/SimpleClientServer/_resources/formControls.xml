@@ -1,0 +1,29 @@
+<?xlm version="1.0"?>
+<!-- object to input in the form -->
+<objects>
+    <button>
+        <type></type>
+        <name></name>
+        <locationX></locationX>
+        <locationY></locationY>
+        <sizeX></sizeX>
+    </button>
+    <button>
+
+    </button>
+    <listBox>
+
+    </listBox>
+    <textBox>
+
+    </textBox>
+    <textBox>
+
+    </textBox>
+    <textBox>
+
+    </textBox>
+    <textBox>
+
+    </textBox>
+</objects>
