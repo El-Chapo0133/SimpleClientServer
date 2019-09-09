@@ -1,9 +1,6 @@
 namespace SimpleClientServerLtoJSON {
     public class XMLtoJSON {
         private Json buffer;
-        public XMLtoJSON() {
-
-        }
         public Json Buffer {
             get {
                 if (bufferNotEmpty()) {
@@ -20,6 +17,10 @@ namespace SimpleClientServerLtoJSON {
                 return false;
             }
         }
+        /// <summary>
+        /// Convert a Xml document into Json Object
+        /// <summary>
+        /// <param name="xml">Xml Document to convert</param>
         public Json Convert(XMLDocument xml) {
             // TODO : check xml
             if (isXmlRight(xml)) {

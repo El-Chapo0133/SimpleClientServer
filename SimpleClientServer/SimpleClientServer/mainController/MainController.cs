@@ -8,18 +8,26 @@ namespace SimpleClientServer.mainController
 {
     class MainController
     {
+        // private consts
+        private const byte MAXCHARINMESSAGE = 255;
+        private const String XMLCONTROLSFILEPATH = "../../_resources/formControls.xml";
         // private variables
         private Ip ip = new Ip();
         private Port port = new Port();
         private Buffer buffer = new Buffer(this);
+        private XMLtoJSON xmlToJson = new XMLtoJSON();
         private MainForm mainForm;
         private Socket socket;
         private EndPoint epLocal, epRemote;
-        // private consts
-        private const byte MAXCHARINMESSAGE = 255;
+        private Json jsonObject;
+        private XMLDocument xmlDocument = new XMLDocument(XMLCONTROLSFILEPATH);
         // public variables
         // public consts
 
+        /*
+         * *************************************************************
+         * * Public functions
+         */
         /// <summary>
         /// Constructor
         /// </summary>
@@ -38,7 +46,7 @@ namespace SimpleClientServer.mainController
             ip.Local = ip.getLocalIp();
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this.socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            // default port used -> will not be checked for tcp connection
+            // default port usobjected -> will not be checked for tcp connection
             this.port.Local = "1000";
             this.port.Remote = "1001";
         }
@@ -66,8 +74,12 @@ namespace SimpleClientServer.mainController
                 startListening();
             }
         }
+        public void displayMessageInForm(String p_message) {
+            // TODO : add item into form
+            mainForm.displayMessage(p_message);
+        }
         /// <summary>
-        /// 
+        /// Receive message and restart listen
         /// </summary>
         private void MessageCallBack(IAsyncResult aResult)
         {
@@ -81,10 +93,11 @@ namespace SimpleClientServer.mainController
                 displayMessage(ex.ToString());
             }
         }
-        public void displayMessageInForm(String p_message) {
-            // TODO : add item into form
-            mainForm.displayMessage(p_message);
-        }
+
+        /*
+         * *************************************************************
+         * * Private functions
+         */
         private bool canConnect() {
             if (epLocal != null && epRemote != null)
                 return true;
@@ -116,6 +129,9 @@ namespace SimpleClientServer.mainController
         }
         private void displayMessage(String message) {
             MessageBox.Show(message);
+        }
+        private Json getJsonFromXML(XMLDocument xml) {
+            return xmlToJson.convert(xml);
         }
     }
 }
