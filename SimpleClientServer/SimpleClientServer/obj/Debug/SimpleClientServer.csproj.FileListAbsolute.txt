@@ -7,3 +7,4 @@ D:\SimpleClientServer\SimpleClientServer\SimpleClientServer\bin\Debug\SimpleClie
 D:\SimpleClientServer\SimpleClientServer\SimpleClientServer\bin\Debug\SimpleClientServer.pdb
 D:\SimpleClientServer\SimpleClientServer\SimpleClientServer\obj\Debug\SimpleClientServer.exe
 D:\SimpleClientServer\SimpleClientServer\SimpleClientServer\obj\Debug\SimpleClientServer.pdb
+D:\SimpleClientServer\SimpleClientServer\SimpleClientServer\obj\Debug\SimpleClientServer.MainForm.resources

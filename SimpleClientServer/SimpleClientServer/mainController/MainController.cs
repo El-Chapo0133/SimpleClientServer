@@ -31,6 +31,8 @@ namespace SimpleClientServer.mainController
             epLocal = epRemote = null;
             this.mainForm = p_mainForm;
             this.buffer = new Buffer(this);
+
+            this.mainForm.mainController = this;
         }
 
         /// <summary>
@@ -86,15 +88,20 @@ namespace SimpleClientServer.mainController
                 displayError(ex.ToString());
             }
         }
-        public String convertMessage(byte[] p_message) {
+        public String convertStringMessage(byte[] p_message) {
             // array converter ASCII
             ASCIIEncoding aEncoding = new ASCIIEncoding();
             // get char from byte got
             return aEncoding.GetString(p_message);
         }
-        public void displayMessageInForm(String p_message) {
-            // TODO : add item into form
-            MessageBox.Show("Test!");
+        public byte[] convertByteMessage(string p_message) {
+            // array converter ASCII
+            ASCIIEncoding aEncoding = new ASCIIEncoding();
+            // get bytes from the string got
+            return aEncoding.GetBytes(p_message);
+        }
+        public void displayMessageInForm(string p_message) {
+            this.mainForm.addMessage(this.ip.Remote + ": " + p_message);
         }
         private bool canConnect() {
             if (epLocal != null && epRemote != null)
@@ -104,6 +111,13 @@ namespace SimpleClientServer.mainController
         }
         private void connect() {
             this.socket.Connect(epRemote);
+        }
+        public void SendMessage(string p_message)
+        {
+            // get a sendable message from string
+            byte[] converted_message = this.convertByteMessage(p_message);
+            // send the message from the socket
+            this.socket.Send(converted_message);
         }
         private void setConnectVariables() {
             // get object of local network
@@ -119,7 +133,7 @@ namespace SimpleClientServer.mainController
             // format byte
             receivedData = (byte[])aResult.AsyncState;
             // TODO : trigger event on this buffer set
-            //buffer = receivedMessage;
+            this.buffer.BufferByte = receivedData;
         }
         private void startListening() {
             // restart listening

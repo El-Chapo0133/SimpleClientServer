@@ -17,7 +17,7 @@ namespace SimpleClientServer._object {
             }
         }
         public void setBuffer_Event() {
-            mainController.displayMessageInForm(mainController.convertMessage(this.buffer));
+            mainController.displayMessageInForm(mainController.convertStringMessage(this.buffer));
         }
     }
 }
