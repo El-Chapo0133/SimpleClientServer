@@ -1,4 +1,5 @@
 using SimpleClientServer.mainController;
+using System.Text;
 
 namespace SimpleClientServer._object {
     public class Buffer {
@@ -16,8 +17,14 @@ namespace SimpleClientServer._object {
                 setBuffer_Event();
             }
         }
+        private string convertMessage() {
+            // array converter ASCII
+            ASCIIEncoding aEncoding = new ASCIIEncoding();
+            // get char from byte got
+            return aEncoding.GetString(this.buffer);
+        }
         public void setBuffer_Event() {
-            mainController.displayMessageInForm(mainController.convertStringMessage(this.buffer));
+            mainController.displayMessageInForm(convertMessage());
         }
     }
 }

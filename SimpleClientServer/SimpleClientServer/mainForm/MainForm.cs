@@ -34,7 +34,7 @@ namespace SimpleClientServer
                 mainController.setLocalPort(this.textBoxLocalPort.Text);
                 mainController.setRemotePort(this.textBoxRemotePort.Text);
                 // connect
-                mainController.Connect();
+                mainController.fullConnect();
             }
             catch (Exception ex)
             {

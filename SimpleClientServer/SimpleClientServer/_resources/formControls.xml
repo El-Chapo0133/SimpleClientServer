@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<form>
+    <!-- Form parameters -->
+    <size>881;729</size>
+</form>
+<objects>
+    <labelLocalPort>
+        <name>labelLocalPort</name>
+        <location>12;22</location>
+        <text>Port local</text>
+        <type>Label</type>
+    </labelLocalPort>
+    <labelRemotePort>
+        <name>labelRemotePort</name>
+        <location>195;22</location>
+        <text>Port distant</text>
+        <type>Label</type>
+    </labelRemotePort>
+    <labelRemoteIP>
+        <name>labelRemoteIP</name>
+        <location>378;22</location>
+        <text>Ip distante</text>
+        <type>Label</type>
+    </labelRemotePort>
+    <buttonConnect>
+        <name>buttonConnect</name>
+        <size>100;50<size>
+        <location>300;20</location>
+        <type>Button</type>
+    </buttonConnect>
+    <listBoxAllMessages>
+        <name>listBoxAllMessages</name>
+        <size>841;566</size>
+        <location>12;89</location>
+        <type>ListBox</type>
+    </listBoxAllMessages>
+    <textBoxLocalPort>
+        <name>textBoxLocalPort</name>
+        <size>148;20</size>
+        <location>12;38</location>
+        <type>TextBox</type>
+    </textBoxLocalPort>
+    <textBoxRemotePort>
+        <name>textBoxRemotePort</name>
+        <size>148;20</size>
+        <location>195;38</location>
+        <type>TextBox</type>
+    </textBoxRemotePort>
+    <textBoxRemoteIP>
+        <name>textBoxRemoteIP</name>
+        <size>148;20</size>
+        <location>378;38</location>
+        <type>TextBox</type>
+    </textBoxRemoteIP>
+    <textBoxOurMessage>
+        <name>textBoxOurMessage</name>
+        <size>656;20</size>
+        <location>12;682</location>
+        <type>TextBox</type>
+    </textBoxOurMessage>
+    <buttonSendMessage>
+        <name>buttonSendMessage</name>
+        <size>163;42</size>
+        <location>690;670</location>
+        <type>Button</type>
+    </buttonSendMessage>
+</objects>

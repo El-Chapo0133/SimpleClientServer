@@ -10,18 +10,23 @@ namespace SimpleClientServer.mainController
 {
     public class MainController
     {
-        // Private variables
+        // private consts
+        private const byte MAXCHARINMESSAGE = 255;
+        private const String XMLCONTROLSFILEPATH = "../../_resources/formControls.xml";
+        // private variables
         private Ip ip = new Ip();
         private Port port = new Port();
         private Buffer buffer;
         private MainForm mainForm;
         private Socket socket;
         private EndPoint epLocal, epRemote;
-        // private consts
-        private const byte MAXCHARINMESSAGE = 255;
         // public variables
         // public consts
 
+        /*
+         * *************************************************************
+         * * Public functions
+         */
         /// <summary>
         /// Constructor
         /// </summary>
@@ -43,7 +48,7 @@ namespace SimpleClientServer.mainController
             ip.Local = ip.getLocalIp();
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
             this.socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            // default port used -> will not be checked for tcp connection
+            // default port usobjected -> will not be checked for tcp connection
             this.port.Local = "1000";
             this.port.Remote = "1001";
         }
@@ -63,7 +68,7 @@ namespace SimpleClientServer.mainController
         /// <summary>
         /// Connect From local ip and port and remote ip and port
         /// </summary>
-        public void Connect() {
+        public void fullConnect() {
             setConnectVariables();
             bindLocalEndPoint();
             if (canConnect()) {
@@ -72,7 +77,7 @@ namespace SimpleClientServer.mainController
             }
         }
         /// <summary>
-        /// 
+        /// Receive message and restart listen
         /// </summary>
         private void MessageCallBack(IAsyncResult aResult)
         {
@@ -80,12 +85,10 @@ namespace SimpleClientServer.mainController
             {
                 tryReceiveMessage(aResult);
                 startListening();
-                //return receivedMessage;
             }
             catch (Exception ex)
             {
-                // show the error
-                displayError(ex.ToString());
+                displayMessage(ex.ToString());
             }
         }
         public String convertStringMessage(byte[] p_message) {
@@ -103,6 +106,10 @@ namespace SimpleClientServer.mainController
         public void displayMessageInForm(string p_message) {
             this.mainForm.addMessage(this.ip.Remote + ": " + p_message);
         }
+        /*
+         * *************************************************************
+         * * Private functions
+         */
         private bool canConnect() {
             if (epLocal != null && epRemote != null)
                 return true;
@@ -139,7 +146,7 @@ namespace SimpleClientServer.mainController
             // restart listening
             this.socket.BeginReceiveFrom(buffer.BufferByte, 0, buffer.BufferByte.Length, SocketFlags.None, ref epRemote, new AsyncCallback(MessageCallBack), buffer.BufferByte);
         }
-        private void displayError(String message) {
+        private void displayMessage(String message) {
             MessageBox.Show(message);
         }
     }
